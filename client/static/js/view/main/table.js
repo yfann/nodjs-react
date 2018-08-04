@@ -19,6 +19,60 @@ const CustomTableCell = withStyles(theme => ({
   },
 }))(TableCell);
 
+class MyTable extends React.Component{
+  constructor(props){
+    super(props);
+    this.state={list:[]};
+    //this.classes=PropTypes.object.isRequired;
+    var _this=this;
+    store.getAllData(function (data) {
+      var i = 0;
+      var len = data.length;
+      var list=[];
+      for(; i<len; i++) {
+        list.push({
+          name:i,
+          address:data[i].Message,
+          key: i
+        });
+      }
+      _this.setState({list:list});
+    })
+  }
+  render(){
+    return(
+      <Paper>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <CustomTableCell>Dessert (100g serving)</CustomTableCell>
+              <CustomTableCell numeric>Calories</CustomTableCell>
+              <CustomTableCell numeric>Fat (g)</CustomTableCell>
+              <CustomTableCell numeric>Carbs (g)</CustomTableCell>
+              <CustomTableCell numeric>Protein (g)</CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.state.list.map(n => {
+              return (
+                <TableRow key={n.id}>
+                  <CustomTableCell component="th" scope="row">
+                    {n.name}
+                  </CustomTableCell>
+                  <CustomTableCell numeric>{n.calories}</CustomTableCell>
+                  <CustomTableCell numeric>{n.fat}</CustomTableCell>
+                  <CustomTableCell numeric>{n.carbs}</CustomTableCell>
+                  <CustomTableCell numeric>{n.protein}</CustomTableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Paper>
+    );
+  }
+}
+
 const styles = theme => ({
   root: {
     width: '100%',
@@ -35,71 +89,4 @@ const styles = theme => ({
   },
 });
 
-let id = 0;
-function createData(name, calories, fat, carbs, protein) {
-  id += 1;
-  return { id, name, calories, fat, carbs, protein };
-}
-
-const data = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-function CustomizedTable(props) {
-  const { classes } = props;
-  var list = [];
-
-  store.getAllData(function (data) {
-    var i = 0;
-    var len = data.length;
-    
-    for(; i<len; i++) {
-      list.push({
-        name:i,
-        address:data[i].Message,
-        key: i
-      });
-    }
-  })
-
-  return (
-    <Paper className={classes.root}>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <CustomTableCell>Dessert (100g serving)</CustomTableCell>
-            <CustomTableCell numeric>Calories</CustomTableCell>
-            <CustomTableCell numeric>Fat (g)</CustomTableCell>
-            <CustomTableCell numeric>Carbs (g)</CustomTableCell>
-            <CustomTableCell numeric>Protein (g)</CustomTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {list.map(n => {
-            return (
-              <TableRow className={classes.row} key={n.id}>
-                <CustomTableCell component="th" scope="row">
-                  {n.name}
-                </CustomTableCell>
-                <CustomTableCell numeric>{n.calories}</CustomTableCell>
-                <CustomTableCell numeric>{n.fat}</CustomTableCell>
-                <CustomTableCell numeric>{n.carbs}</CustomTableCell>
-                <CustomTableCell numeric>{n.protein}</CustomTableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </Paper>
-  );
-}
-
-CustomizedTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(CustomizedTable);
+export default withStyles(styles)(MyTable);
